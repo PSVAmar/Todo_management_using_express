@@ -1,3 +1,4 @@
+/* eslint-disable no-empty */
 /* eslint-disable no-unused-vars */
 const express = require("express");
 const app = express();
@@ -5,17 +6,33 @@ const { Todo } = require("./models");
 const bodyparser = require("body-parser");
 //const { json } = require("sequelize");
 app.use(bodyparser.json());
+const request = require('request');
 // app.get("/",(request,response)=>{
 //     //console.log("Hello World");
 //     response.send("Hii");
 // })
 // eslint-disable-next-line no-unused-vars
+app.set("view engine" , "ejs");
+app.use(bodyparser.json())
+var todoArr = [];
+app.get("/",(req,res)=>{
+     // console.log(JSON.parse(body).length)
+      // for(var i=0;i<JSON.parse(body).length;i++){
+          
+      //     todoArr.push(JSON.parse(body)[i].title);
+         
+      // }
+      console.log(todoArr)
+      res.render("header.ejs",{userData4 : todoArr},)
+})
+
 app.get("/todos", async (request, response) => {
   console.log("Todo List");
+  var arr=[];
   try{
     const todo = await Todo.findAll();
     return response.json(todo);
-  } catch (error) {
+  } catch (error) { 
     console.log(error);
     return response.status(422).json(error);
   }
