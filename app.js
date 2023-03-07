@@ -14,16 +14,18 @@ const request = require('request');
 // eslint-disable-next-line no-unused-vars
 app.set("view engine" , "ejs");
 app.use(bodyparser.json())
-var todoArr = [];
-app.get("/",(req,res)=>{
-     // console.log(JSON.parse(body).length)
-      // for(var i=0;i<JSON.parse(body).length;i++){
-          
-      //     todoArr.push(JSON.parse(body)[i].title);
-         
-      // }
-      console.log(todoArr)
-      res.render("header.ejs",{userData4 : todoArr},)
+
+app.get("/",async (req,res)=>{
+  const alltodos = await Todo.getAllTodos();
+  const currentDate = new Date().toISOString().split('T')[0];
+  const overdueTodos = alltodos.filter(todo => todo.dueDate < currentDate);
+  const dueTodayTodos = alltodos.filter(todo => todo.dueDate === currentDate);
+  const dueLaterTodos = alltodos.filter(todo => todo.dueDate > currentDate);
+  res.render("index",{
+      overdueTodos:overdueTodos,
+      dueTodayTodos:dueTodayTodos,
+      dueLaterTodos:dueLaterTodos
+  });     
 })
 
 app.get("/todos", async (request, response) => {
