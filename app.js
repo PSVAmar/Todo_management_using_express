@@ -6,15 +6,19 @@ const { Todo } = require("./models");
 const bodyparser = require("body-parser");
 //const { json } = require("sequelize");
 app.use(bodyparser.json());
-const request = require('request');
 // app.get("/",(request,response)=>{
 //     //console.log("Hello World");
 //     response.send("Hii");
 // })
 // eslint-disable-next-line no-unused-vars
-app.set("view engine" , "ejs");
+const path = require('path');
+app.use(bodyparser.urlencoded({extended: true}));
+app.use(express.static('public'));
 app.use(bodyparser.json())
 
+// eslint-disable-next-line no-undef
+app.use('/css',express.static(path.join(__dirname+'/public/css')));
+app.set("view engine" , "ejs");
 app.get("/",async (req,res)=>{
   const alltodos = await Todo.getAllTodos();
   const currentDate = new Date().toISOString().split('T')[0];
@@ -30,7 +34,6 @@ app.get("/",async (req,res)=>{
 
 app.get("/todos", async (request, response) => {
   console.log("Todo List");
-  var arr=[];
   try{
     const todo = await Todo.findAll();
     return response.json(todo);
