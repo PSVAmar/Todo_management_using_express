@@ -1,0 +1,45 @@
+npm init
+npm i express --save
+npm i sequelize --save
+npm i pg --save
+npm install sequelize-cli --save-dev
+npx sequelize-cli init
+
+Sequelize CLI [Node: 16.15.0, CLI: 6.5.2, ORM: 6.28.0]
+
+Created "config\config.json"
+|| HOLD DB connections like  User name,db name,host,password,..etc  
+Successfully created models folder at "E:\hello-node\todo-manager\models".
+|| representation of tables that are going to be used in this model
+Successfully created migrations folder at "E:\hello-node\todo-manager\migrations".
+||represents the changes made to the tables
+Successfully created seeders folder at "E:\hello-node\todo-manager\seeders".
+|| if we want to push initial data to the database ,,,etc
+
+npx sequelize db:create
+|| for creating a database
+|| before writing end points in the routes ,,
+ we have to generate a todo model using
+npx sequelize-cli model:generate --name Todo --attributes title:string,dueDate:dateonly,completed:boolean
+
+Sequelize CLI [Node: 16.15.0, CLI: 6.5.2, ORM: 6.28.0]
+
+New model was created at E:\hello-node\todo-manager\models\todo.js .
+New migration was created at E:\hello-node\todo-manager\migrations\20230120130537-create-todo.
+
+To create Todo's  table in the database and 
+npx sequelize-cli db:migrate
+
+Sequelize CLI [Node: 16.15.0, CLI: 6.5.2, ORM: 6.28.0]
+
+Loaded configuration file "config\config.json".
+Using environment "development".
+== 20230120130537-create-todo: migrating =======
+== 20230120130537-create-todo: migrated (0.064s)
+
+
+Sequelize meta is also created along with todo and it keeps tracks of the db changes that we have made by running the migration
+in order to create a todo we need to create a request body 
+in order  to read the requestbody we need bodyparser module  to accept and parse the  json body
+
+422 stands for unprocessable entity i.e. there is some problem while processing this data
