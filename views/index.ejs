@@ -3,14 +3,21 @@
  <head>
    <meta charset="UTF-8" />
    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+   <meta name="csrf-token" content="<%= csrfToken%>">
    <link rel="stylesheet" href="/css/styles.css" />
     <title>TO-DO Manager</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
+      var token = document.
+      querySelector('meta[name="csrf-token"]')
+      .getAttribute("content");  
       function updateTodo(id){
         fetch(`/todos/${id}/markAsCompleted`,{
         "method":"put",
-        headers:{"Content-Type":"Application/json"}
+        headers:{"Content-Type":"Application/json"},
+        body:JSON.stringify({
+          "_csrf":token
+        })
       }).then(
         (res)=>{
           if(res.ok){
@@ -25,7 +32,10 @@
       function deleteTodo(id){
         fetch(`/todos/${id}`,{
         "method":"delete",
-        headers:{"Content-Type":"Application/json"}
+        headers:{"Content-Type":"Application/json"},
+        body:JSON.stringify({
+          "_csrf":token
+        })
       }).then(
         (res)=>{
           if(res.ok){

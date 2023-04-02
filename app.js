@@ -1,12 +1,16 @@
 /* eslint-disable no-empty */
 /* eslint-disable no-unused-vars */
 const express = require("express");
+var csurf = require("tiny-csrf");
 const app = express();
 const { Todo } = require("./models");
 const bodyparser = require("body-parser");
+const cookieParser = require("cookie-parser");
 //const { json } = require("sequelize");
 app.use(bodyparser.json());
 app.use(express.urlencoded({extended:false}));
+app.use(cookieParser("shh! some string"));
+app.use(csurf("12345678910111212121212121212122",['post','put','delete']));
 // app.get("/",(request,response)=>{
 //     //console.log("Hello World");
 //     response.send("Hii");
@@ -30,7 +34,8 @@ app.get("/",async (req,res)=>{
       res.render("index",{
         overdueTodos:overdueTodos,
         dueTodayTodos:dueTodayTodos,
-        dueLaterTodos:dueLaterTodos
+        dueLaterTodos:dueLaterTodos,
+        csrfToken : req.csrfToken(),
     });  
   }
   else{
