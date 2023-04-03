@@ -22,11 +22,15 @@ module.exports = (sequelize, DataTypes) => {
         }
       })
     }
+    
     markAsCompleted(){
       return this.update({completed:true})
     }
     static getAllTodos(){
       return this.findAll();
+    }
+    setCompletionStatus(status){
+      return this.update({completed:status});
     }
     // deleteTodo(){
     //   this.destroy();

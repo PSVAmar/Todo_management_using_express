@@ -25,7 +25,10 @@ app.use(bodyparser.json())
 app.use('/css',express.static(path.join(__dirname+'/public/css')));
 app.set("view engine" , "ejs");
 app.get("/",async (req,res)=>{
+  
   const alltodos = await Todo.getAllTodos();
+  const completed =await  alltodos.filter(todo=>todo.completed==true);
+// console.log(completed)
   const currentDate = new Date().toISOString().split('T')[0];
   const overdueTodos = alltodos.filter(todo => todo.dueDate < currentDate);
   const dueTodayTodos = alltodos.filter(todo => todo.dueDate === currentDate);
@@ -35,12 +38,13 @@ app.get("/",async (req,res)=>{
         overdueTodos:overdueTodos,
         dueTodayTodos:dueTodayTodos,
         dueLaterTodos:dueLaterTodos,
+        completed:completed,
         csrfToken : req.csrfToken(),
     });  
   }
   else{
     res.json({
-      overdueTodos,dueTodayTodos,dueLaterTodos,
+      overdueTodos,dueTodayTodos,dueLaterTodos,completed
       }
     )
   }
@@ -73,11 +77,12 @@ app.post("/todos", async (request, response) => {
 });
 
 //put http://mytodoapp.com/todos/123/markAsCompleted
-app.put("/todos/:id/markAsCompleted", async (request, response) => {
+app.put("/todos/:id", async (request, response) => {
   console.log("WE have created a todo with ID: ", request.params.id);
   const todo = await Todo.findByPk(request.params.id);
   try {
-    const updatedTodo = await todo.markAsCompleted();
+    
+    const updatedTodo = await todo.setCompletionStatus(request.body.completed);
     return response.json(updatedTodo);
   } catch (error) {
     console.log(error);
