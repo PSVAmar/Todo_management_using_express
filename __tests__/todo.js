@@ -62,7 +62,7 @@ describe("Todo test suite", () => {
   test("Delete a Todo",async ()=>{
     let res = await agent.get("/");
     let csrfToken = extractCsrfToken(res);
-    await agent.delete("/todos").send({
+    await agent.post("/todos").send({
       title: "Buy Milk",
       dueDate: new Date().toISOString(),
       completed: false,
