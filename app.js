@@ -20,7 +20,7 @@ const cookieParser = require("cookie-parser");
 //const { json } = require("sequelize");
 app.use(bodyparser.json());
 app.use(express.urlencoded({extended:false}));
-app.use(cookieParser("shh! some string"));
+app.use(cookieParser("shh! some secret string"));
 app.use(csurf("12345678910111212121212121212122",['post','put','delete']));
 // app.get("/",(request,response)=>{
 //     //console.log("Hello World");
