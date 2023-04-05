@@ -20,8 +20,20 @@ describe("Todo test suite", () => {
     await db.sequelize.close();
     server.close();
   });
-  test("responds with json at /todos", async () => {
-    const res = await agent.get("/");
+  test("Sign up",async ()=>{
+    let res = await agent.get("/signup");
+    const csrfToken = extractCsrfToken(res);
+    res = await agent.post("/users").send({
+      firstName: "abc",
+      lastName : "3",
+      email : "abc3@gmail.com",
+      password : "loggedInUser",
+      _csrf : csrfToken,
+    });
+    expect(res.statusCode).toBe(302);
+  })
+  test("responds with json at /todos", async () => { //Create a new todo
+    const res = await agent.get("/todos");
     const csrfToken = extractCsrfToken(res);
     const response = await agent.post("/todos").send({
       title: "Buy Milk",
@@ -33,7 +45,7 @@ describe("Todo test suite", () => {
     
   });
   test("Mark a todo as complete", async () => {
-    let res = await agent.get("/");
+    let res = await agent.get("/todos");
     let csrfToken = extractCsrfToken(res);
      await agent.post("/todos").send({
       title: "Buy Milk",
@@ -43,13 +55,13 @@ describe("Todo test suite", () => {
     });
     
     const groupedTodosResponse = await agent
-      .get("/")
+      .get("/todos")
       .set("Accept","application/json");
       const parsedGroupedResponse = JSON.parse(groupedTodosResponse.text);
       const dueTodayCount = parsedGroupedResponse.dueTodayTodos.length;
       const latestTodo = parsedGroupedResponse.dueTodayTodos[dueTodayCount-1];
 
-      res = await agent.get("/");
+      res = await agent.get("/todos");
       csrfToken = extractCsrfToken(res);
 
       const markCompleteResponse = await agent.put(`/todos/${latestTodo.id}`).send({
@@ -60,28 +72,28 @@ describe("Todo test suite", () => {
       expect(parsedUpdateResponse.completed).toBe(true);
   });
   test("Delete a Todo",async ()=>{
-    let res = await agent.get("/");
+    let res = await agent.get("/todos");
     let csrfToken = extractCsrfToken(res);
     await agent.post("/todos").send({
       title: "Buy Milk",
       dueDate: new Date().toISOString(),
       completed: false,
-      "_csrf":csrfToken
+      "_csrf":csrfToken,
     });
     const groupedTodosResponse = await agent
-    .get("/")
+    .get("/todos")
     .set("Accept","application/json");
     const parsedGroupedResponse = JSON.parse(groupedTodosResponse.text);
     const dueTodayCount = parsedGroupedResponse.dueTodayTodos.length;
     const latestTodo = parsedGroupedResponse.dueTodayTodos[dueTodayCount-1];
 
-    res = await agent.get("/");
+    res = await agent.get("/todos");
     csrfToken = extractCsrfToken(res);
     
-    const deleteResponse = await agent.delete(`/todos/${latestTodo.id}`).send({
-      _csrf:csrfToken
+    const deletedResponse = await agent.delete(`/todos/${latestTodo.id}`).send({
+      "_csrf":csrfToken
     })
-    const parsedUpdateResponse = JSON.parse(deleteResponse.text);
+    const parsedUpdateResponse = JSON.parse(deletedResponse.text);
     expect(parsedUpdateResponse.success).toBe(true);
   })
   

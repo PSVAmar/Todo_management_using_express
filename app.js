@@ -210,7 +210,7 @@ app.delete("/todos/:id",connectEnsureLogin.ensureLoggedIn(), async (request, res
   //   return response.json({response:"The requested ID is not found try again with another ID"});
   // }
   try{
-    await Todo.remove(request.params.id);
+    await Todo.remove(request.params.id,request.user.id);
     return response.json({success:true});
   }
   catch(error ){

@@ -19,12 +19,13 @@ module.exports = (sequelize, DataTypes) => {
       return this.create({title: title,dueDate: dueDate,completed: false,userId})
     }
     static async remove(id, userId){
+      console.log
       return this.destroy({
         where:{
           id,
           userId
-        }
-      })
+        },
+      });
     }
     
     markAsCompleted(){
