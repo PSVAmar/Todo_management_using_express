@@ -132,7 +132,7 @@ app.get("/todos", async (request, response) => {
   }
 });
 app.get("/signup",(req,res)=>{
-  res.render("signup",{title: "Signup",csrfToken:req.csrfToken})
+  res.render("signup",{title: "Signup",csrfToken:req.csrfToken()})
 })
 app.post("/users",async (req,res)=>{
   //Have to create the user here 
@@ -173,7 +173,7 @@ app.post("/users",async (req,res)=>{
 })
 
 app.get("/login",(req,res)=>{
-  res.render("login",{title:"Login",csrfToken:req.csrfToken });
+  res.render("login",{title:"Login",csrfToken:req.csrfToken() });
 })
 
 app.post("/session", passport.authenticate("local", {
