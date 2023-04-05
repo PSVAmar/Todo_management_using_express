@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+   <meta charset="UTF-8" />
+   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+   <meta name="csrf-token" content="<%= csrfToken%>">
+   <link rel="stylesheet" href="/css/styles.css" />
+    <title>TO-DO Manager</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      var token = document.
+      querySelector('meta[name="csrf-token"]')
+      .getAttribute("content");  
+      function updateTodo(id,currentStatus){
+        fetch(`/todos/${id}`,{
+        "method":"put",
+        headers:{"Content-Type":"Application/json"},
+        body:JSON.stringify({
+          completed:!currentStatus,
+          "_csrf":token
+        })
+      }).then(
+        (res)=>{
+          if(res.ok){
+            window.location.reload();
+          }
+          
+        }
+      ).catch((err)=>{
+        console.error(err);
+      })
+      }
+      function deleteTodo(id){
+        fetch(`/todos/${id}`,{
+        "method":"delete",
+        headers:{"Content-Type":"Application/json"},
+        body:JSON.stringify({
+          "_csrf":token
+        })
+      }).then(
+        (res)=>{
+          if(res.ok){
+            window.location.reload();
+          }
+          
+        }
+      ).catch((err)=>{
+        console.error(err);
+      })
+      }
+      
+    </script>
+ </head>
+ 
+ <body>
+  
+  <div class="grid grid-cols-6">
+    <div class="col-start-3 col-span-2">
+      <%- include('header.ejs')%>
+      <a href="/signout">Sign out</a>
+      <%- include('todo.ejs') %>
+      
+    </div>  
+  </div>
+
+  
+<body>
+</html>

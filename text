@@ -43,3 +43,6 @@ in order to create a todo we need to create a request body
 in order  to read the requestbody we need bodyparser module  to accept and parse the  json body
 
 422 stands for unprocessable entity i.e. there is some problem while processing this data
+
+1)Creating a new migration
+2)->Association between models
