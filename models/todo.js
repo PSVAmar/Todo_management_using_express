@@ -50,7 +50,7 @@ module.exports = (sequelize, DataTypes) => {
       }
    },
     dueDate: DataTypes.DATEONLY,
-    completed: DataTypes.BOOLEAN
+    completed: {type:DataTypes.BOOLEAN,defaultValue:false}
   }, {
     sequelize,
     modelName: 'Todo',

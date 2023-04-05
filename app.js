@@ -9,7 +9,7 @@ const session = require('express-session');
 const LocalStrategy = require('passport-local');
 const bcrypt = require('bcrypt');
 
-const saltRounds = 10;
+
 
 const app = express();
 
@@ -99,24 +99,24 @@ app.get("/todos", connectEnsureLogin.ensureLoggedIn(), async (req,res)=>{
   console.log(req.user);
   const userId = req.user.id;
   const alltodos = await Todo.getAllTodos();
-  const completed =await  alltodos.filter(todo=>todo.completed==true && todo.userId == userId);
+  const complete =await  Todo.findAll({where:{completed:true,userId}});
 // console.log(completed)
   const currentDate = new Date().toISOString().split('T')[0];
-  const overdueTodos = alltodos.filter(todo => todo.dueDate < currentDate && todo.userId === userId );
-  const dueTodayTodos =await alltodos.filter(todo => todo.dueDate === currentDate && todo.userId === userId);
-  const dueLaterTodos =await alltodos.filter(todo => todo.dueDate > currentDate && todo.userId === userId);
+  const overdueTodos = alltodos.filter(todo => todo.dueDate < currentDate && todo.userId === userId && todo.completed==false );
+  const dueTodayTodos =await alltodos.filter(todo => todo.dueDate === currentDate && todo.userId === userId && todo.completed==false);
+  const dueLaterTodos =await alltodos.filter(todo => todo.dueDate > currentDate && todo.userId === userId && todo.completed==false);
   if(req.accepts('html')){
       res.render("todos",{
         overdueTodos:overdueTodos,
         dueTodayTodos:dueTodayTodos,
         dueLaterTodos:dueLaterTodos,
-        completed:completed,
+        complete:complete,
         csrfToken : req.csrfToken(),
     });  
   }
   else{
     res.json({
-      overdueTodos,dueTodayTodos,dueLaterTodos,completed
+      overdueTodos,dueTodayTodos,dueLaterTodos,complete
       }
     )
   }
@@ -150,6 +150,7 @@ app.post("/users",async (req,res)=>{
   }
   //console.log("Firstname ",req.body.firstName);
   //Hash password using decrypt
+  const saltRounds = 10;
   const hashedPwd =await  bcrypt.hash(req.body.password,saltRounds)
   console.log(hashedPwd);
   try{
