@@ -48,7 +48,7 @@ passport.use(new LocalStrategy({
       return done(null,user);
     }
     else{
-      return done("Invalid Password");
+      return done(null, false,{message : "Invalid Password"});
     }
   }).catch((error)=>{
     return done(error);
@@ -69,7 +69,17 @@ passport.deserializeUser((id,done)=>{
     done(error,null)
   })
 })
-const path = require('path');
+
+const flash = require("connect-flash");
+const path = require("path");
+// eslint-disable-next-line no-undef
+app.set("views", path.join(__dirname, "views"));
+app.use(flash());
+app.use(function(request, response, next) {
+  response.locals.messages = request.flash();
+  next();
+});
+// const path = require('path');
 const { error } = require("console");
 app.use(bodyparser.urlencoded({extended: true}));
 app.use(express.static('public'));
@@ -126,6 +136,18 @@ app.get("/signup",(req,res)=>{
 })
 app.post("/users",async (req,res)=>{
   //Have to create the user here 
+  if(req.body.firstName.length===0 && req.body.lastName.length==0){
+    req.flash("error","Please Enter First Name");
+    return res.redirect("/signup")
+  }
+  if(req.body.email.length===0){
+    req.flash("error","Please Enter Email");
+    return res.redirect("/signup")
+  }
+  if(req.body.password.length===0){
+    req.flash("error","Please Enter Password");
+    return res.redirect("/signup")
+  }
   //console.log("Firstname ",req.body.firstName);
   //Hash password using decrypt
   const hashedPwd =await  bcrypt.hash(req.body.password,saltRounds)
@@ -154,7 +176,11 @@ app.get("/login",(req,res)=>{
   res.render("login",{title:"Login",csrfToken:req.csrfToken });
 })
 
-app.post("/session",passport.authenticate('local',{failureRedirect:"/login"}),(req,res)=>{
+app.post("/session", passport.authenticate("local", {
+      failureRedirect: "/login",
+      failureFlash: true,
+    }),
+  (req,res)=>{
     console.log(req.user);
     res.redirect("/todos");
 })
