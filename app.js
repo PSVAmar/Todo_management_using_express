@@ -110,7 +110,7 @@ app.get("/todos", connectEnsureLogin.ensureLoggedIn(), async (req,res)=>{
         overdueTodos:overdueTodos,
         dueTodayTodos:dueTodayTodos,
         dueLaterTodos:dueLaterTodos,
-        complete:complete,
+        complete:complete ,
         csrfToken : req.csrfToken(),
     });  
   }
