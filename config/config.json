@@ -1,11 +1,10 @@
 {
-  
   "development": {
     "username": "postgres",
     "password": "changeme",
-    "database": "wd-todo-dev",
+    "database": "wd-todo-development",
     "host": "127.0.0.1",
-    "port":"5433",
+    "port":5433,
     "dialect": "postgres"
   },
   "test": {
@@ -13,8 +12,8 @@
     "password": "changeme",
     "database": "wd-todo-test",
     "host": "127.0.0.1",
-    "dialect": "postgres",
-    "port":"5433"
+    "port":5433,
+    "dialect": "postgres"
   },
   "production": {
     "use_env_variable":"DATABASE_URL",

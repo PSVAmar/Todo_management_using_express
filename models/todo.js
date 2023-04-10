@@ -10,47 +10,58 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-        Todo.belongsTo(models.User,{
-          foreignKey:'UserId'
-        })
+      Todo.belongsTo(models.User,{
+        foreignKey:'userId'
+      })
       // define association here
     }
-    static addTodo({title,dueDate,userId}){
-      return this.create({title: title,dueDate: dueDate,completed: false,userId})
+    static addTodo({title ,dueDate,userId}){
+      return this.create({title:title,dueDate:dueDate,completed:false,userId});
     }
-    static async remove(id, userId){
+    static getTodos(){
+      return this.findAll();
+    }
+    markAsCompleted(){
+      return this.update({completed:true})
+    }
+    static async remove(id,userId){
       return this.destroy({
         where:{
           id,
           userId
-        },
+        }
+      })
+    }
+    static getAllTodos(userId){
+      return this.findAll({
+        where:{
+          userId,
+        }
       });
     }
-    
-    markAsCompleted(){
-      return this.update({completed:true})
-    }
-    static getAllTodos(){
-      return this.findAll();
-    }
     setCompletionStatus(status){
-      return this.update({completed:status});
+      return this.update({completed :status});
     }
-    // deleteTodo(){
-    //   this.destroy();
-    // }
   }
   Todo.init({
     title: {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
-          notNull: true,
-          len:5
-      }
-   },
-    dueDate: DataTypes.DATEONLY,
-    completed: {type:DataTypes.BOOLEAN,defaultValue:false}
+        notNull: true,
+    }
+  },
+  dueDate: {
+    type: DataTypes.DATEONLY,
+    allowNull:false,
+    validate:{
+      notNull:true,
+    }
+  },
+  completed:  {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false,
+  },
   }, {
     sequelize,
     modelName: 'Todo',

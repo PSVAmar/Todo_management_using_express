@@ -10,10 +10,10 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
+      //A user has many Todos and so the below code is wriiten
       User.hasMany(models.Todo,{
         foreignKey:'userId'
       })
-      // define association here
     }
   }
   User.init({
@@ -38,7 +38,6 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         validate: {
           notNull: true,
-          len:8
       },
     },
   }, {

@@ -1,8 +1,12 @@
+mkdir todoManager
 npm init
+has only package.json
+create index.js
 npm i express --save
+will create package-lock.json along with node_modules
 npm i sequelize --save
 npm i pg --save
-npm install sequelize-cli --save-dev
+npm install sequelize-cli --save-dev Add to development dependency and not to production dependency
 npx sequelize-cli init
 
 Sequelize CLI [Node: 16.15.0, CLI: 6.5.2, ORM: 6.28.0]
@@ -20,6 +24,10 @@ npx sequelize db:create
 || for creating a database
 || before writing end points in the routes ,,
  we have to generate a todo model using
+op: 
+Loaded configuration file "config\config.json".
+Using environment "development".
+Database wd-todo-development created.
 npx sequelize-cli model:generate --name Todo --attributes title:string,dueDate:dateonly,completed:boolean
 
 Sequelize CLI [Node: 16.15.0, CLI: 6.5.2, ORM: 6.28.0]
@@ -42,7 +50,52 @@ Sequelize meta is also created along with todo and it keeps tracks of the db cha
 in order to create a todo we need to create a request body 
 in order  to read the requestbody we need bodyparser module  to accept and parse the  json body
 
+TO read a request body we need a body-parser which comes inbuilt and can be imported
+then we will write 
+//app.use(bodyParser.json())
+Todo.create will create a new table in our DB
+we can write  const todo = `await` Todo.create({title:request.body.title,dueDate:req.body.dueDate,completed:false})
+we can read this by return res.json(todo)
+we can catch any errors by `try catch` block and we can send `return res.status(422).json(error) `
 422 stands for unprocessable entity i.e. there is some problem while processing this data
 
+For doing Level-10
+we have to create a migration and model file using the below command
+`npx sequelize-cli model:generate --name User --attributes firstName:string,lastName:string,email:string,password:string `
+
+Sequelize CLI [Node: 16.15.0, CLI: 6.6.0, ORM: 6.31.0]
+
+New model was created at E:\hello-node\todo_manager_cont\models\user.js .
+New migration was created at E:\hello-node\todo_manager_cont\migrations\20230410063128-create-user.js .
+
+we have added two fields in the email of migrations folder 
+`email: {
+        type: Sequelize.STRING,
+        allowNull:false,
+        unique:true
+      }`
+to execute migration file we can use the following command
+`npx sequelize-cli db:migrate`
+
+Sequelize CLI [Node: 16.15.0, CLI: 6.6.0, ORM: 6.31.0]
+
+Loaded configuration file "config\config.json".
+Using environment "development".
+== 20230410063128-create-user: migrating =======
+== 20230410063128-create-user: migrated (0.130s)
+
+To create a new migration we can use the folowing command
+
+`npx sequelize-cli migration:create --name add-user-id-in-todos`
+
+
+Sequelize CLI [Node: 16.15.0, CLI: 6.6.0, ORM: 6.31.0]
+
+migrations folder at "E:\hello-node\todo_manager_cont\migrations" already exists.
+New migration was created at E:\hello-node\todo_manager_cont\migrations\20230410063849-add-user-id-in-todos.js .
+
+
+
 1)Creating a new migration
+Make necessary changes in the add-todo file in migrations and do sequelize-cli db:migrate
 2)->Association between models
